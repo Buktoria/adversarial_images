@@ -56,23 +56,25 @@ cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y_conv, y
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-grad = tf.gradients(cross_entropy, x)
+grad = tf.gradients(-cross_entropy, x)
 
 saver = tf.train.Saver()
 
+# Create adversarial image for digit 6 with 2
 with tf.Session() as sess:
 	# Restore variables from disk.
 	saver.restore(sess, "/tmp/model.ckpt")
 
 	print('Done Restoring')
 
-	# Create adversarial image for digit 6 with 2
-	
 	# Get digit 2 images
 	digit_2_images = [i for i, l in zip(mnist.test.images, mnist.test.labels) if l[2] == 1]
+	digit_6_images = [i for i, l in zip(mnist.test.images, mnist.test.labels) if l[6] == 1]
 	
-	digit_2_label = [0, 0, 1, 0, 0, 0, 0 ,0, 0, 0] 
-	digit_6_label = [0, 0, 0, 0, 0, 0, 1, 0, 0, 0] 
+	digit_2_label = [0, 0, 1, 0, 0, 0, 0 ,0, 0, 0]
+	digit_5_label = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0] 
+	digit_6_label = [0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
+	digit_7_label = [0, 0, 0, 0, 0, 0, 0, 1, 0, 0] 
 
 	
 	# Create Adversary Image
@@ -81,37 +83,65 @@ with tf.Session() as sess:
 	image_gradiant = sess.run(
 		grad, 
 		feed_dict={x:[digit_2_images[10]], y_:[digit_6_label], keep_prob:1.0}
-	)
+	)[0][0]
+
 	print(image_gradiant)
 
+	# image_gradiant = sess.run(
+	# 	grad, 
+	# 	feed_dict={x:[digit_2_images[10]], y_:[digit_5_label], keep_prob:1.0}
+	# )[0][0]
+
+	# print(image_gradiant)
+
 	# We want to know if we need to incress or decress a pixel of the image
-	image_pixel_direction = np.sign(image_gradiant[0])
+	image_pixel_direction = np.sign(image_gradiant)
 
 	# Perform an image update
-	new_image = digit_2_images[10] + image_pixel_direction * 0.1
 
 	# my_classification = sess.run(tf.argmax(y_conv, 1), feed_dict={x: [new_image]})
 
-	new_image = digit_2_images[10] + image_pixel_direction * 0.01
-	pred2 = sess.run(y_conv, feed_dict={x:new_image, keep_prob:1.0})
+	# print(digit_2_images[10])
+	# print(image_gradiant)
+	# print(image_pixel_direction)
+
+
+	pred2 = sess.run(y_conv, feed_dict={x:[digit_2_images[10]], keep_prob:1.0})
 	label2 = np.argmax(pred2)
 	print(label2)
 	print(pred2)
 
+
+	new_image = digit_2_images[10] + image_pixel_direction * 0.001 
+	pred2 = sess.run(y_conv, feed_dict={x:[new_image], keep_prob:1.0})
+	label2 = np.argmax(pred2)
+	print(label2)
+	print(pred2)
+
+
+
+	new_image = digit_2_images[10] + image_pixel_direction * 0.01 
+	pred2 = sess.run(y_conv, feed_dict={x:[new_image], keep_prob:1.0})
+	label2 = np.argmax(pred2)
+	print(label2)
+	print(pred2)
+
+##############
+
 	new_image = digit_2_images[10] + image_pixel_direction * 0.1
-	pred2 = sess.run(y_conv, feed_dict={x:new_image, keep_prob:1.0})
+	pred2 = sess.run(y_conv, feed_dict={x:[new_image], keep_prob:1.0})
 	label2 = np.argmax(pred2)
 	print(label2)
 	print(pred2)
 
 	new_image = digit_2_images[10] + image_pixel_direction 
-	pred2 = sess.run(y_conv, feed_dict={x:new_image, keep_prob:1.0})
+	pred2 = sess.run(y_conv, feed_dict={x:[new_image], keep_prob:1.0})
 	label2 = np.argmax(pred2)
 	print(label2)
 	print(pred2)
 
-	new_image = digit_2_images[10] + image_pixel_direction * 5
-	pred2 = sess.run(y_conv, feed_dict={x:new_image, keep_prob:1.0})
+	new_image = digit_2_images[10] + image_pixel_direction 
+	pred2 = sess.run(y_conv, feed_dict={x:[new_image], keep_prob:1.5})
 	label2 = np.argmax(pred2)
 	print(label2)
 	print(pred2)
@@ -120,8 +150,11 @@ with tf.Session() as sess:
 	# Show images
 	_, (ax1, ax2, ax3), = plt.subplots(1, 3)
 	ax1.imshow(digit_2_images[10].reshape(28, 28), cmap=plt.cm.Greys);
-	# ax2.imshow(image_gradiant, cmap=plt.cm.Greys);
+	ax2.imshow(np.array(image_gradiant).reshape(28,28), cmap=plt.cm.Greys);
 	ax3.imshow(new_image.reshape(28,28), cmap=plt.cm.Greys);
 	plt.show()
+
+	# NOTE TO SELF< WE ARE GETTING NEGTIVE PROP. 
+	# WHICH MEANS WE SHOULD BE TAKING THE SOFT MAX
 
 
