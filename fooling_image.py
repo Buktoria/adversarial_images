@@ -110,13 +110,10 @@ with tf.Session() as sess:
 			if label == 6:
 	
 				plt.subplot(10, 3, (total*3 + 1))
-				# plt.title('Original')
 				plt.imshow(image.reshape(28, 28), cmap=plt.cm.Greys);
 				plt.subplot(10, 3, (total*3 + 2))
-				# plt.title('Delta')
 				plt.imshow(np.array(delta).reshape(28,28), cmap=plt.cm.Greys);
 				plt.subplot(10, 3, (total*3 + 3))
-				# 
 				plt.imshow(new_image.reshape(28,28), cmap=plt.cm.Greys);
 
 
