@@ -63,7 +63,7 @@ saver = tf.train.Saver()
 # Create adversarial image for digit 6 with 2
 with tf.Session() as sess:
 	# Restore variables from disk.
-	saver.restore(sess, "/tmp/model.ckpt")
+	saver.restore(sess, "./tmp/model.ckpt")
 
 	print('Done Restoring')
 
@@ -118,6 +118,11 @@ with tf.Session() as sess:
 	print(label2)
 	print(pred2)
 
+	_, (ax1, ax2, ax3), = plt.subplots(1, 3)
+	ax1.imshow(digit_2_images[10].reshape(28, 28), cmap=plt.cm.Greys);
+	ax2.imshow(np.array(image_gradiant).reshape(28,28), cmap=plt.cm.Greys);
+	ax3.imshow(new_image.reshape(28,28), cmap=plt.cm.Greys);
+	plt.show()
 
 
 	new_image = digit_2_images[10] + image_pixel_direction * 0.01 
@@ -125,6 +130,12 @@ with tf.Session() as sess:
 	label2 = np.argmax(pred2)
 	print(label2)
 	print(pred2)
+
+	_, (ax1, ax2, ax3), = plt.subplots(1, 3)
+	ax1.imshow(digit_2_images[10].reshape(28, 28), cmap=plt.cm.Greys);
+	ax2.imshow(np.array(image_gradiant).reshape(28,28), cmap=plt.cm.Greys);
+	ax3.imshow(new_image.reshape(28,28), cmap=plt.cm.Greys);
+	plt.show()
 
 ##############
 
@@ -134,11 +145,23 @@ with tf.Session() as sess:
 	print(label2)
 	print(pred2)
 
+	_, (ax1, ax2, ax3), = plt.subplots(1, 3)
+	ax1.imshow(digit_2_images[10].reshape(28, 28), cmap=plt.cm.Greys);
+	ax2.imshow(np.array(image_gradiant).reshape(28,28), cmap=plt.cm.Greys);
+	ax3.imshow(new_image.reshape(28,28), cmap=plt.cm.Greys);
+	plt.show()
+
 	new_image = digit_2_images[10] + image_pixel_direction 
 	pred2 = sess.run(y_conv, feed_dict={x:[new_image], keep_prob:1.0})
 	label2 = np.argmax(pred2)
 	print(label2)
 	print(pred2)
+
+	_, (ax1, ax2, ax3), = plt.subplots(1, 3)
+	ax1.imshow(digit_2_images[10].reshape(28, 28), cmap=plt.cm.Greys);
+	ax2.imshow(np.array(image_gradiant).reshape(28,28), cmap=plt.cm.Greys);
+	ax3.imshow(new_image.reshape(28,28), cmap=plt.cm.Greys);
+	plt.show()
 
 	new_image = digit_2_images[10] + image_pixel_direction 
 	pred2 = sess.run(y_conv, feed_dict={x:[new_image], keep_prob:1.5})

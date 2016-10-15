@@ -75,6 +75,6 @@ for i in range(20000):
 
 
 saver = tf.train.Saver()
-save_path = saver.save(sess, "/tmp/model.ckpt")
+save_path = saver.save(sess, "./tmp/model.ckpt")
 print('done')
 
