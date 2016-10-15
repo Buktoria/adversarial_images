@@ -1,14 +1,14 @@
 # Adversarial Images
 
-Based on the following article, we can create images that a cnn will missclassify with high confidance by tweeking pixel values slightly.
+Based on the following article, we can create images that a cnn will misclassify with high confidence by tweaking pixel values slightly.
 
 http://karpathy.github.io/2015/03/30/breaking-convnets/
 
-This is a simple implamentation of that given simple cnn provided by a tutorial by Tensorflow.
+This is a simple implementation of that given simple cnn provided by a tutorial by Tensorflow.
 
 https://www.tensorflow.org/versions/r0.11/tutorials/mnist/pros/index.html#deep-mnist-for-experts
 
-## Requirments
+## Requirements
 
 Please use python 3.4 or higher.
 
@@ -24,12 +24,12 @@ To build that model first run work.py. This repo comes with a serialized version
 
 #### Step Two Create Adversarial Images
 
-Run the fooling_images.py file. It will out the first 10 images it fools a 2 to thinking its a 6. You can pass in a value alpha when you start. This values will used to control the amount each pixel is tweeked.
+Run the fooling_images.py file. It will out the first 10 images it fools a 2 to thinking its a 6. You can pass in a value alpha when you start. This values will used to control the amount each pixel is tweaked.
 
-After the script runs, it will ouput a missclassification score after image transformation. It will then plot the ten images it fooloed the classifier with.
+After the script runs, it will output a misclassification score after image transformation. It will then plot the ten images it fooloed the classifier with.
 
 ## Intersting Insights
 
-One of the intersting things from this exparament was the different results you would get when modify alpha. Alpha was used as a parameter to tweek how much pixel values would change. I first started out pick ones that where quite low because they visually did less disruption to the image. This resulted in a high number of miss classifed results after the image was modified. Then looking back at the article I choose a higher one of 0.5. Though this worked a lot better I was unstisfied with the visual results of the image. I found the best value was around 0.2 which yieled valid results for the new images about 0.35% of the time. 
+One of the interesting things from this experiment was the different results you would get when modify alpha. Alpha was used as a parameter to tweak how much pixel values would change. I first started out pick ones that where quite low because they visually did less disruption to the image. This resulted in a high number of miss classified results after the image was modified. Then looking back at the article I choose a higher one of 0.5. Though this worked a lot better I was unsatisfied with the visual results of the image. I found the best value was around 0.2 which yielded valid results for the new images about 0.35% of the time. 
 
-The resulting images are a bit distoried. This is due to the fact that the images are of a low resalution but also because in out cnn model we are taking the mean of the softmax for the cross entroy. This means that the cross entroy has undergone regularization. This leads to higher distortion as mentioned in the article.
+The resulting images are a bit distorted. This is due to the fact that the images are of a low resolution but also because in out cnn model we are taking the mean of the softmax for the cross entropy. This means that the cross entropy has undergone regularization. This leads to higher distortion as mentioned in the article.
