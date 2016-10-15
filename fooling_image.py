@@ -105,30 +105,40 @@ with tf.Session() as sess:
 			new_image = image + image_pixel_direction * alpha
 			pred2 = sess.run(y_conv, feed_dict={x:[new_image], keep_prob:1.0})
 			label = np.argmax(pred2)
-			
-			print(label)
-			print(pred2)
 
 			# Only show correctly 6 classified images
 			if label == 6:
-				_, (ax1, ax2, ax3), = plt.subplots(1, 3)
-				ax1.imshow(digit_2_images[10].reshape(28, 28), cmap=plt.cm.Greys);
-				plt.title('Original')
-				ax2.imshow(np.array(delta).reshape(28,28), cmap=plt.cm.Greys);
-				plt.title('Delta')
-				ax3.imshow(new_image.reshape(28,28), cmap=plt.cm.Greys);
-				plt.title('New Image - Classification {}'.format(label))
-				plt.show()
+	
+				plt.subplot(10, 3, (total*3 + 1))
+				# plt.title('Original')
+				plt.imshow(digit_2_images[10].reshape(28, 28), cmap=plt.cm.Greys);
+				plt.subplot(10, 3, (total*3 + 2))
+				# plt.title('Delta')
+				plt.imshow(np.array(delta).reshape(28,28), cmap=plt.cm.Greys);
+				plt.subplot(10, 3, (total*3 + 3))
+				# 
+				plt.imshow(new_image.reshape(28,28), cmap=plt.cm.Greys);
+
 
 				total += 1
 			
 			else:
 				miss_classified += 1
 
+# Output Stat.
 print('Alpha = {}'.format(alpha))
 print('Total Miss Classified = {}'.format(miss_classified))
 print('Perentage Right When Modified = {}'.format(miss_classified/(miss_classified+10)))
 
+# Display Results
+plt.subplot(10, 3, 1)
+plt.title('Original')
+plt.subplot(10, 3, 2)
+plt.title('Delta')
+plt.subplot(10, 3, 3)
+plt.title('New Image - Classification 6')
+
+plt.show()
 
 
 

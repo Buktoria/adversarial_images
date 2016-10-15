@@ -67,12 +67,6 @@ for i in range(20000):
     print("step %d, training accuracy %g"%(i, train_accuracy))
   train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
 
-#print("test accuracy %g"%accuracy.eval(feed_dict={
-#    x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
-
-#with open('objs.pickle', 'w') as f:  # Python 3: open(..., 'wb')
-#    pickle.dump([x, y_, W_conv1, b_conv1, W_fc1, b_fc1, W_fc2, b_fc2, y_conv], f)
-
 
 saver = tf.train.Saver()
 save_path = saver.save(sess, "./tmp/model.ckpt")
