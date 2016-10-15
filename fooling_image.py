@@ -111,7 +111,7 @@ with tf.Session() as sess:
 	
 				plt.subplot(10, 3, (total*3 + 1))
 				# plt.title('Original')
-				plt.imshow(digit_2_images[10].reshape(28, 28), cmap=plt.cm.Greys);
+				plt.imshow(image.reshape(28, 28), cmap=plt.cm.Greys);
 				plt.subplot(10, 3, (total*3 + 2))
 				# plt.title('Delta')
 				plt.imshow(np.array(delta).reshape(28,28), cmap=plt.cm.Greys);
