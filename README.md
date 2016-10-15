@@ -10,11 +10,23 @@ https://www.tensorflow.org/versions/r0.11/tutorials/mnist/pros/index.html#deep-m
 
 ## Requirments
 
-Please use python3.4 or higher.
+Please use python 3.4 or higher.
 
 [tenserflow](https://www.tensorflow.org/versions/r0.11/get_started/os_setup.html#pip-installation)
 
 [numpy ](http://www.scipy.org/scipylib/download.html)
+
+## How to Run
+
+#### Step One Create the Model
+
+To build that model first run work.py. This repo comes with a serialized version of the model I build and based my results off of. If you would like to use this one, go head to the next part.
+
+#### Step Two Create Adversarial Images
+
+Run the fooling_images.py file. It will out the first 10 images it fools a 2 to thinking its a 6. You can pass in a value alpha when you start. This values will used to control the amount each pixel is tweeked.
+
+After the script runs, it will ouput a missclassification score after image transformation. It will then plot the ten images it fooloed the classifier with.
 
 ## Intersting Insights
 
