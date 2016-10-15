@@ -73,7 +73,7 @@ with tf.Session() as sess:
 	
 	# Create Adversary Image
 	digit_6_label = [0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
-	alpha = 0.2
+	alpha = float(input('Value for alpha = ')) # tested with value 0.2
 
 
 	# Perform an image update for 10 images
@@ -128,7 +128,7 @@ with tf.Session() as sess:
 # Output Stat.
 print('Alpha = {}'.format(alpha))
 print('Total Miss Classified = {}'.format(miss_classified))
-print('Perentage Right When Modified = {}'.format(miss_classified/(miss_classified+10)))
+print('Perentage Right When Modified = {}'.format(10/(miss_classified+10)))
 
 # Display Results
 plt.subplot(10, 3, 1)
