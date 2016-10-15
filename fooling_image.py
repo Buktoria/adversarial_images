@@ -69,115 +69,66 @@ with tf.Session() as sess:
 
 	# Get digit 2 images
 	digit_2_images = [i for i, l in zip(mnist.test.images, mnist.test.labels) if l[2] == 1]
-	digit_6_images = [i for i, l in zip(mnist.test.images, mnist.test.labels) if l[6] == 1]
 	
-	digit_2_label = [0, 0, 1, 0, 0, 0, 0 ,0, 0, 0]
-	digit_5_label = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0] 
-	digit_6_label = [0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
-	digit_7_label = [0, 0, 0, 0, 0, 0, 0, 1, 0, 0] 
-
 	
 	# Create Adversary Image
-
-	# Get image gradiant with the class we want it to classify as
-	image_gradiant = sess.run(
-		grad, 
-		feed_dict={x:[digit_2_images[10]], y_:[digit_6_label], keep_prob:1.0}
-	)[0][0]
-
-	print(image_gradiant)
-
-	# image_gradiant = sess.run(
-	# 	grad, 
-	# 	feed_dict={x:[digit_2_images[10]], y_:[digit_5_label], keep_prob:1.0}
-	# )[0][0]
-
-	# print(image_gradiant)
-
-	# We want to know if we need to incress or decress a pixel of the image
-	image_pixel_direction = np.sign(image_gradiant)
-
-	# Perform an image update
-
-	# my_classification = sess.run(tf.argmax(y_conv, 1), feed_dict={x: [new_image]})
-
-	# print(digit_2_images[10])
-	# print(image_gradiant)
-	# print(image_pixel_direction)
+	digit_6_label = [0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
+	alpha = 0.2
 
 
-	pred2 = sess.run(y_conv, feed_dict={x:[digit_2_images[10]], keep_prob:1.0})
-	label2 = np.argmax(pred2)
-	print(label2)
-	print(pred2)
+	# Perform an image update for 10 images
+	total = 0
+	miss_classified = 0
+	for image in digit_2_images:
+		
+		# After doing this to 10 images stop
+		if total == 10:
+			break
+
+		# Only create adversary images for those that are oringally 
+		# correctly classified
+		if np.argmax(
+			sess.run(y_conv, feed_dict={x:[image], keep_prob:1.0})
+		) == 2:
+			
+
+			# Get image gradiant with the class we want it to classify as
+			delta = sess.run(
+				grad, 
+				feed_dict={x:[image], y_:[digit_6_label], keep_prob:1.0}
+			)[0][0]
+
+			# We want to know if we need to incress 
+			# or decress a pixel of the image
+			image_pixel_direction = np.sign(delta)
+			
+			new_image = image + image_pixel_direction * alpha
+			pred2 = sess.run(y_conv, feed_dict={x:[new_image], keep_prob:1.0})
+			label = np.argmax(pred2)
+			
+			print(label)
+			print(pred2)
+
+			# Only show correctly 6 classified images
+			if label == 6:
+				_, (ax1, ax2, ax3), = plt.subplots(1, 3)
+				ax1.imshow(digit_2_images[10].reshape(28, 28), cmap=plt.cm.Greys);
+				plt.title('Original')
+				ax2.imshow(np.array(delta).reshape(28,28), cmap=plt.cm.Greys);
+				plt.title('Delta')
+				ax3.imshow(new_image.reshape(28,28), cmap=plt.cm.Greys);
+				plt.title('New Image - Classification {}'.format(label))
+				plt.show()
+
+				total += 1
+			
+			else:
+				miss_classified += 1
+
+print('Alpha = {}'.format(alpha))
+print('Total Miss Classified = {}'.format(miss_classified))
+print('Perentage Right When Modified = {}'.format(miss_classified/(miss_classified+10)))
 
 
-	new_image = digit_2_images[10] + image_pixel_direction * 0.001 
-	pred2 = sess.run(y_conv, feed_dict={x:[new_image], keep_prob:1.0})
-	label2 = np.argmax(pred2)
-	print(label2)
-	print(pred2)
-
-	_, (ax1, ax2, ax3), = plt.subplots(1, 3)
-	ax1.imshow(digit_2_images[10].reshape(28, 28), cmap=plt.cm.Greys);
-	ax2.imshow(np.array(image_gradiant).reshape(28,28), cmap=plt.cm.Greys);
-	ax3.imshow(new_image.reshape(28,28), cmap=plt.cm.Greys);
-	plt.show()
-
-
-	new_image = digit_2_images[10] + image_pixel_direction * 0.01 
-	pred2 = sess.run(y_conv, feed_dict={x:[new_image], keep_prob:1.0})
-	label2 = np.argmax(pred2)
-	print(label2)
-	print(pred2)
-
-	_, (ax1, ax2, ax3), = plt.subplots(1, 3)
-	ax1.imshow(digit_2_images[10].reshape(28, 28), cmap=plt.cm.Greys);
-	ax2.imshow(np.array(image_gradiant).reshape(28,28), cmap=plt.cm.Greys);
-	ax3.imshow(new_image.reshape(28,28), cmap=plt.cm.Greys);
-	plt.show()
-
-##############
-
-	new_image = digit_2_images[10] + image_pixel_direction * 0.1
-	pred2 = sess.run(y_conv, feed_dict={x:[new_image], keep_prob:1.0})
-	label2 = np.argmax(pred2)
-	print(label2)
-	print(pred2)
-
-	_, (ax1, ax2, ax3), = plt.subplots(1, 3)
-	ax1.imshow(digit_2_images[10].reshape(28, 28), cmap=plt.cm.Greys);
-	ax2.imshow(np.array(image_gradiant).reshape(28,28), cmap=plt.cm.Greys);
-	ax3.imshow(new_image.reshape(28,28), cmap=plt.cm.Greys);
-	plt.show()
-
-	new_image = digit_2_images[10] + image_pixel_direction 
-	pred2 = sess.run(y_conv, feed_dict={x:[new_image], keep_prob:1.0})
-	label2 = np.argmax(pred2)
-	print(label2)
-	print(pred2)
-
-	_, (ax1, ax2, ax3), = plt.subplots(1, 3)
-	ax1.imshow(digit_2_images[10].reshape(28, 28), cmap=plt.cm.Greys);
-	ax2.imshow(np.array(image_gradiant).reshape(28,28), cmap=plt.cm.Greys);
-	ax3.imshow(new_image.reshape(28,28), cmap=plt.cm.Greys);
-	plt.show()
-
-	new_image = digit_2_images[10] + image_pixel_direction 
-	pred2 = sess.run(y_conv, feed_dict={x:[new_image], keep_prob:1.5})
-	label2 = np.argmax(pred2)
-	print(label2)
-	print(pred2)
-
-
-	# Show images
-	_, (ax1, ax2, ax3), = plt.subplots(1, 3)
-	ax1.imshow(digit_2_images[10].reshape(28, 28), cmap=plt.cm.Greys);
-	ax2.imshow(np.array(image_gradiant).reshape(28,28), cmap=plt.cm.Greys);
-	ax3.imshow(new_image.reshape(28,28), cmap=plt.cm.Greys);
-	plt.show()
-
-	# NOTE TO SELF< WE ARE GETTING NEGTIVE PROP. 
-	# WHICH MEANS WE SHOULD BE TAKING THE SOFT MAX
 
 
